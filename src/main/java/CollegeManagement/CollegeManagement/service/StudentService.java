@@ -8,6 +8,7 @@ import CollegeManagement.CollegeManagement.Repository.ProfessorRepository;
 import CollegeManagement.CollegeManagement.Repository.StudentRepository;
 import CollegeManagement.CollegeManagement.Repository.SubjectRepository;
 import CollegeManagement.CollegeManagement.exception.ResourceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class StudentService {
 
     private final StudentRepository studentRepository;
@@ -29,11 +31,13 @@ public class StudentService {
     }
 
     public StudentDto GetStudentById(Long studentId) {
+        log.info("StudentController:GetStudentById");
         StudentEntity getStudentId = studentRepository.findStudentByIdWithOneQuery(studentId);
         return modelMapper.map(getStudentId, StudentDto.class);
     }
     //get Students(Get)
     public List<StudentDto> getStudents() {
+        log.info("StudentController:getStudents");
         List<StudentEntity> studentEntityList = studentRepository.getStudentsOptimized();
         return studentEntityList
                 .stream()
@@ -43,6 +47,7 @@ public class StudentService {
 
     //post Students(Post)
     public StudentDto createStudent(StudentDto newStudentDto) {
+        log.info("StudentController:createStudent");
         //StudentEntity studentEntity = modelMapper.map(newStudentDto , StudentEntity.class);
         //StudentEntity saveStudent = studentRepository.save(studentEntity);
         //return modelMapper.map(saveStudent, StudentDto.class);
@@ -63,6 +68,7 @@ public class StudentService {
 
     //update Student(Put)
     public StudentDto updateStudent(StudentDto updateStudentDto, Long studentId) {
+        log.info("StudentController:updateStudent");
         StudentEntity existingStudent = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
         modelMapper.map(updateStudentDto , existingStudent);
         existingStudent.setId(studentId);
@@ -78,6 +84,7 @@ public class StudentService {
 
     }
     public boolean deleteStudent(Long studentId) {
+        log.info("StudentController:deleteStudent");
         isExist(studentId);
         studentRepository.deleteById(studentId);
         return true;
